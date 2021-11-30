@@ -5,7 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Database" />
       <Folder Include="Dto" />
       <Folder Include="Interfaces" />
       <Folder Include="Models" />
