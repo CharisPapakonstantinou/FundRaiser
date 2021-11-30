@@ -40,6 +40,4 @@ bin/
 .idea/
 obj
 
-#Migrations folder
-**/Migrations/
 
