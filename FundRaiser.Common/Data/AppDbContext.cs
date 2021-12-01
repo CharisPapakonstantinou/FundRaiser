@@ -24,7 +24,7 @@ namespace FundRaiser.Common.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             //User - Reward many to many relationship (via Funds as intermendiate table)
+             //User - Reward many to many relationship (via Funds as intermediate table)
               modelBuilder.Entity<Fund>().HasKey(f => new { f.UserId, f.RewardId });
 
               modelBuilder.Entity<Fund>()
