@@ -47,17 +47,17 @@ namespace FundRaiser.Common.Services
             .ToListAsync();
         }
 
-        public async Task<Media> Update(int mediaId, Media med)
+        public async Task<Media> Update(int mediaId, Media media)
         {
-            var media = await _context.Media.FirstOrDefaultAsync(m => m.Id == mediaId);
+            var mediaFromDb = await _context.Media.FirstOrDefaultAsync(m => m.Id == mediaId);
 
-            media.Description = med.Description ?? media.Description;
-            media.Path = med.Path ?? media.Path;
-            media.MediaType = med.MediaType;
+            mediaFromDb.Description = media.Description ?? mediaFromDb.Description;
+            mediaFromDb.Path = media.Path ?? mediaFromDb.Path;
+            mediaFromDb.MediaType = media.MediaType;
 
             await _context.SaveChangesAsync();
 
-            return media;
+            return mediaFromDb;
         }
     }
 }

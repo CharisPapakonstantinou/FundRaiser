@@ -9,8 +9,8 @@ namespace FundRaiser.Common.Interfaces
 {
     interface IUpdateService
     {
-        Task<Update> Create(Update _update);
-        Task<Update> Update(int updateId, Update _update);
+        Task<Update> Create(Update update);
+        Task<Update> Update(int updateId, Update update);
         Task<bool> Delete(int updateId);
         Task<List<Update>> GetUpdates(int projectId);
     }

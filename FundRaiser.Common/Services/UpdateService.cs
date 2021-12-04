@@ -48,17 +48,17 @@ namespace FundRaiser.Common.Services
             .ToListAsync();
         }
 
-        public async Task<Update> Update(int updateId, Update _update)
+        public async Task<Update> Update(int updateId, Update update)
         {
-            var update = await _context.Updates.FirstOrDefaultAsync(u => u.Id == updateId);
+            var updateFromDb = await _context.Updates.FirstOrDefaultAsync(u => u.Id == updateId);
 
-            update.Title = _update.Title ?? update.Title;
-            update.Description = _update.Description ?? update.Description;
-            update.PostDate = _update.PostDate;
+            updateFromDb.Title = update.Title ?? updateFromDb.Title;
+            updateFromDb.Description = update.Description ?? updateFromDb.Description;
+            updateFromDb.PostDate = update.PostDate;
 
             await _context.SaveChangesAsync();
 
-            return update;
+            return updateFromDb;
         }
     }
 }
