@@ -11,7 +11,8 @@ namespace FundRaiser.Common.Models
         //Base properties
         public string Title { get; set; }
         public DateTime PostDate { get; set; }
-        
+        public string Description { get; set; }
+
         //Navigation properties
         public Project Project { get; set; }
     }

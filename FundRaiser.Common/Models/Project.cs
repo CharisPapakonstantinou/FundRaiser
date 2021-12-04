@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FundRaiser.Common.Models
@@ -12,6 +13,10 @@ namespace FundRaiser.Common.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public Category Category { get; set; }
+        public decimal Goal { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int NumberOfBackers { get; set; }
 
         //Navigation properties
         public User User { get; set; }
