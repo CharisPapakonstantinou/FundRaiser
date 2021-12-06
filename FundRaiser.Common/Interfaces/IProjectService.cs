@@ -15,5 +15,6 @@ namespace FundRaiser.Common.Interfaces
         Task<Project> GetProject(int id, bool baseInfo = true);
         Task<List<Project>> GetProjects(int pageCount, int pageSize, int? userId = null, string title = null, Category? category = null);
         Task<List<Project>> GetFundedProjects(int userId);
+        Task<List<Project>> GetTopFundedProjects(int count);
     }
 }

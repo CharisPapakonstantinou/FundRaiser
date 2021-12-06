@@ -2,10 +2,8 @@
 using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FundRaiser.Common.Services
@@ -90,6 +88,14 @@ namespace FundRaiser.Common.Services
                 .ThenInclude(r => r.Project)
                 .Where(f => f.UserId == userId)
                 .Select(f => f.Reward.Project)
+                .ToListAsync();
+        }
+
+        public async Task<List<Project>> GetTopFundedProjects(int count)
+        {
+            return await _context.Projects
+                .OrderByDescending(p => p.CurrentAmount)
+                .Take(count)
                 .ToListAsync();
         }
     }
