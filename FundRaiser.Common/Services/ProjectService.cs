@@ -68,17 +68,18 @@ namespace FundRaiser.Common.Services
 
         public async Task<List<Project>> GetProjects(int pageCount, int pageSize, int? userId = null, string title = null, Category? category = null)
         {
-            if (pageSize <= 0) pageSize = 10;
+            //if (pageSize <= 0) pageSize = 10;
+            if (pageSize <= 0 || pageSize > 10) pageSize = 10;
             if (pageCount <= 0) pageCount = 1;
-
-            return await _context.Projects
-                .Skip((pageCount - 1) * pageSize)
-                .Take(pageSize)
+            
+            return await _context.Projects 
                 .Where(p =>
-                    (userId == null || p.UserId == userId) 
+                    (userId == null || p.UserId == userId)
                     && (title == null || p.Title.ToLower().Contains(title.ToLower()))
                     && (category == null || p.Category == category))
                 .OrderByDescending(p => p.Id)
+                .Skip((pageCount - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
         }
 
