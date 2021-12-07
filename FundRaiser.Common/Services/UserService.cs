@@ -56,7 +56,10 @@ namespace FundRaiser.Common.Services
             ? await _context.Users.FirstOrDefaultAsync(p => p.Id == id)
             : await _context.Users
             .Include(u => u.Projects)
+            .ThenInclude(u=> u.Rewards)
             .Include(u => u.Funds)
+            .ThenInclude (u => u.Reward)
+            .ThenInclude(u => u.Project)
             .FirstOrDefaultAsync(u => u.Id == id);
             
             return user;

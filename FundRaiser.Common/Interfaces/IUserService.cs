@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FundRaiser.Common.Interfaces
 {
-    interface IUserService
+    public interface IUserService
     {
         Task<User> Create(User userModel);
         Task<User> Update(int id, User userModel);

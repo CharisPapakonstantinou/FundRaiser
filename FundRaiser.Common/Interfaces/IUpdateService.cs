@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FundRaiser.Common.Interfaces
 {
-    interface IUpdateService
+    public interface IUpdateService
     {
         Task<Update> Create(Update update);
         Task<Update> Update(int updateId, Update update);

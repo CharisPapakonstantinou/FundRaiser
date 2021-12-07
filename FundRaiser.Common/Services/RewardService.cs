@@ -1,4 +1,5 @@
 ﻿using FundRaiser.Common.Database;
+using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FundRaiser.Common.Services
 {
-    public class RewardService
+    public class RewardService : IRewardService
     {
         private readonly AppDbContext _context;
 
@@ -30,7 +31,7 @@ namespace FundRaiser.Common.Services
 
             reward.Title = rewardModel.Title ?? reward.Title;
             reward.Description = rewardModel.Description ?? reward.Description;
-            reward.RequiredAmount = rewardModel.RequiredAmount == 0 ? reward.RequiredAmount : rewardModel.RequiredAmount;
+            reward.Price = rewardModel.Price == 0 ? reward.Price : rewardModel.Price;
 
             await _context.SaveChangesAsync();
 
@@ -90,7 +91,7 @@ namespace FundRaiser.Common.Services
                 RewardId = rewardId
             });
 
-            project.CurrentAmount += reward.RequiredAmount;
+            project.CurrentAmount += reward.Price;
 
             project.NumberOfBackers = isAlreadyBacker ? project.NumberOfBackers : project.NumberOfBackers + 1;
 

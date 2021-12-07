@@ -66,7 +66,6 @@ namespace FundRaiser.Common.Services
 
         public async Task<List<Project>> GetProjects(int pageCount, int pageSize, int? userId = null, string title = null, Category? category = null)
         {
-            //if (pageSize <= 0) pageSize = 10;
             if (pageSize <= 0 || pageSize > 10) pageSize = 10;
             if (pageCount <= 0) pageCount = 1;
             
