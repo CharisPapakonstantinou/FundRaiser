@@ -43,4 +43,6 @@ obj
 #Migrations folder
 **/Migrations/
 
+storage/
+
 
