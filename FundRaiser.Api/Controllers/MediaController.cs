@@ -20,19 +20,22 @@ namespace FundRaiser.Api.Controllers
     {
         private readonly StorageSettings _settings;
         private readonly IMediaService _mediaService;
+        private readonly IProjectService _projectService;
         private const string videoExtension = "mp4";
         private const string imageExtension = "jpg";
-        private readonly IWebHostEnvironment webHostEnvironment;  
-        public MediaController(IMediaService mediaService, StorageSettings settings, IWebHostEnvironment hostEnvironment)
+        public MediaController(IMediaService mediaService, StorageSettings settings, IProjectService projectService)
         {
             _settings = settings;
             _mediaService = mediaService;
-            webHostEnvironment = hostEnvironment;
+            _projectService = projectService;
         }
         
         [HttpPost("Upload")]
         public async Task<object> OnPostUploadAsync(List<IFormFile> files, [FromForm] int projectId)
         {
+            if (await _projectService.GetProject(projectId) == null)
+                return "Corresponding project not found";
+            
             var mediaList = new List<Media>();
             string startupPath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory())?.ToString();
 
