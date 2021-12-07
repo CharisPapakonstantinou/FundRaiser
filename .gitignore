@@ -44,3 +44,8 @@ obj
 **/Migrations/
 
 
+Storage/Images/*
+!Storage/Images/.gitkeep 
+
+Storage/Videos/*
+!Storage/Videos/.gitkeep 
