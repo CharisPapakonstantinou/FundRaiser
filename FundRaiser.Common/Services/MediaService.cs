@@ -24,6 +24,14 @@ namespace FundRaiser.Common.Services
 
             return media;
         }
+        
+        public async Task<List<Media>> Create(List<Media> media)
+        {
+            await _context.Media.AddRangeAsync(media);
+            await _context.SaveChangesAsync();
+
+            return media;
+        }
 
         public async Task<bool> Delete(int mediaId)
         {
