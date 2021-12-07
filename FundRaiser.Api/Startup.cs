@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FundRaiser.Common.ConfigMappers;
 using FundRaiser.Common.Database;
+using FundRaiser.Common.Interfaces;
+using FundRaiser.Common.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,11 +31,21 @@ namespace FundRaiser.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var storageSettings = new StorageSettings();
+            Configuration.Bind(StorageSettings.StorageSection, storageSettings);
+            services.AddSingleton(storageSettings);
+            
+            services.AddControllers();
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+           
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "FundRaiser.Api", Version = "v1"});
             });
+            
+            services.AddTransient<IMediaService, MediaService>();
+            services.AddTransient<IProjectService, ProjectService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

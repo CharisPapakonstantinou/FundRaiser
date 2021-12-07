@@ -18,6 +18,12 @@ namespace FundRaiser.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(builder =>
+                {
+                    var configRootPath = $"{Environment.CurrentDirectory}/../Configs/";
+                    builder.AddJsonFile($"{configRootPath}/appsettings.json", false, false);
+                    builder.AddJsonFile($"{configRootPath}/appsettings.Development.json");
+                })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
 }
