@@ -43,6 +43,10 @@ obj
 #Migrations folder
 **/Migrations/
 
-storage/
+Storage/Images/*
+!Storage/Images/.gitkeep 
+
+Storage/Videos/*
+!Storage/Videos/.gitkeep 
 
 

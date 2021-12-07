@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FundRaiser.Common.ConfigMappers;
+using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace FundRaiser.Api.Controllers
 {
@@ -17,19 +21,21 @@ namespace FundRaiser.Api.Controllers
         private readonly StorageSettings _settings;
         private readonly IMediaService _mediaService;
         private const string videoExtension = "mp4";
-        private const string imageExtension = "png";
-        
-        public MediaController(IMediaService mediaService, StorageSettings settings)
+        private const string imageExtension = "jpg";
+        private readonly IWebHostEnvironment webHostEnvironment;  
+        public MediaController(IMediaService mediaService, StorageSettings settings, IWebHostEnvironment hostEnvironment)
         {
             _settings = settings;
             _mediaService = mediaService;
+            webHostEnvironment = hostEnvironment;
         }
         
         [HttpPost("Upload")]
         public async Task<object> OnPostUploadAsync(List<IFormFile> files, [FromForm] int projectId)
         {
             var mediaList = new List<Media>();
-            
+            string startupPath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory())?.ToString();
+
             long size = files.Sum(f => f.Length);
             foreach (var formFile in files)
             {
@@ -40,7 +46,7 @@ namespace FundRaiser.Api.Controllers
                     if (!success)
                         break;
                     
-                    using(var stream = System.IO.File.Create(media.Path))
+                    using(var stream = System.IO.File.Create($"{startupPath}{media.Path}"))
                     {
                         await formFile.CopyToAsync(stream);
                     }
@@ -51,8 +57,9 @@ namespace FundRaiser.Api.Controllers
             
             //Add media into db
             await _mediaService.Create(mediaList);
+
             
-            return mediaList;
+            return mediaList.Select(m => new MediaDto(m,startupPath));
         }
 
         private (bool success, Media media) GenerateMediaAndPath(IFormFile formFile, int projectId)
@@ -62,7 +69,7 @@ namespace FundRaiser.Api.Controllers
                 (   true,
                     new Media
                     {
-                        Path = $"{Environment.CurrentDirectory}/../{_settings.BasePath}/{_settings.VideoPath}/{Guid.NewGuid()}.{videoExtension}",
+                        Path = $"{_settings.BasePath}{_settings.VideoPath}/{Guid.NewGuid()}.{videoExtension}",
                         ProjectId = projectId,
                         MediaType = MediaType.Video
                     }
@@ -73,7 +80,7 @@ namespace FundRaiser.Api.Controllers
                     (   true,
                         new Media
                         {
-                            Path = $"{Environment.CurrentDirectory}/../{_settings.BasePath}/{_settings.ImagesPath}/{Guid.NewGuid()}.{imageExtension}",
+                            Path = $"{_settings.BasePath}{_settings.ImagesPath}/{Guid.NewGuid()}.{imageExtension}",
                             ProjectId = projectId,
                             MediaType = MediaType.Image
                         }
