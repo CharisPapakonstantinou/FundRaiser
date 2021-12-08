@@ -67,5 +67,10 @@ namespace FundRaiser.Common.Services
 
             return mediaFromDb;
         }
+        
+        public async Task<Media> GetMediaById(int id)
+        {
+            return await _context.Media.FirstOrDefaultAsync(m => m.Id == id);
+        }
     }
 }

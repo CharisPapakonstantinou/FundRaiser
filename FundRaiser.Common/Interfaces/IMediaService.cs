@@ -14,5 +14,7 @@ namespace FundRaiser.Common.Interfaces
         Task<Media> Update(int projectId, Media media);
         Task<bool> Delete(int mediaId);
         Task<List<Media>> GetMedia(int projectId);
+        Task<Media> GetMediaById(int id);
+
     }
 }
