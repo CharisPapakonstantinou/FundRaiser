@@ -15,7 +15,7 @@ namespace FundRaiser.Common.Models
         public Category Category { get; set; }
         public decimal CurrentAmount { get; set; }
         public decimal Goal { get; set; }
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.UtcNow;
         public DateTime EndDate { get; set; }
         public int NumberOfBackers { get; set; }
 
