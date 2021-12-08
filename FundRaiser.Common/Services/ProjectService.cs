@@ -87,6 +87,7 @@ namespace FundRaiser.Common.Services
                 .ThenInclude(r => r.Project)
                 .Where(f => f.UserId == userId)
                 .Select(f => f.Reward.Project)
+                .Distinct()
                 .ToListAsync();
         }
 
