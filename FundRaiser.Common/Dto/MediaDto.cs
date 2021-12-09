@@ -11,6 +11,8 @@ namespace FundRaiser.Common.Dto
         public string Path { get; set; }
         public MediaType MediaType { get; set; }
 
+        public MediaDto() { }
+
         public MediaDto(Media media, string appBasePath)
         {
             Id = media.Id;
