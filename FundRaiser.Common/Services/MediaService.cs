@@ -47,7 +47,7 @@ namespace FundRaiser.Common.Services
 
             return true;
         }
-
+        
         public async Task<List<Media>> GetMedia(int mediaId)
         {
             return await _context.Media
