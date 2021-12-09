@@ -1,4 +1,5 @@
-﻿using FundRaiser.Common.Dto;
+﻿using AutoMapper;
+using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,12 @@ namespace FundRaiser.Api.Controllers
     [ApiController]
     public class RewardsController : ControllerBase
     {
-         private readonly IRewardService _service;
-
-        public RewardsController(IRewardService service)
+        private readonly IRewardService _service;
+        private readonly IMapper _mapper;
+        public RewardsController(IRewardService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -29,60 +31,48 @@ namespace FundRaiser.Api.Controllers
                 return NotFound(new ApiResult<List<RewardDto>>(null, false, $"Could not find rewards for project with Id = {projectId}."));
             }
 
-            var rewardsList = tempList.Select(u=> new RewardDto(u)).ToList();
+            var rewardsList = tempList.Select(reward => _mapper.Map<RewardDto>(reward)).ToList();
 
             return Ok(new ApiResult<List<RewardDto>>(rewardsList));
         }
 
         [HttpGet("/BackersReward")]
-        public async Task<ActionResult<ApiResult<List<RewardDto>>>> Get( int userId, int projectId)
+        public async Task<ActionResult<ApiResult<List<RewardDto>>>> Get(int userId, int projectId)
         {
             var tempList = await _service.GetBackerRewards(userId, projectId);
 
             if (tempList.Count == 0)
             {
-                return new ApiResult<List<RewardDto>>(null, false, "No rewards found for this project Id.");
+                return new ApiResult<List<RewardDto>>(null, false, $"User with Id = {userId} has not purchase any reward for the project with Id = {projectId}");
             }
 
-            var rewardsList = tempList.Select(l => new RewardDto(l)).ToList();
+            var rewardsList = tempList.Select(reward => _mapper.Map<RewardDto>(reward)).ToList();
 
             return Ok(new ApiResult<List<RewardDto>>(rewardsList));
         }
 
         [HttpPost]
-        public async Task<ActionResult<ApiResult<RewardDto>>> Post(RewardPostDto rewardPost)
+        public async Task<ActionResult<ApiResult<RewardDto>>> Post(RewardPostDto rewardPostDto)
         {
-            var _reward = new Reward()
-            {
-                ProjectId = rewardPost.ProjectId,
-                Title = rewardPost.Title,
-                Description = rewardPost.Description,
-                Price = (decimal)rewardPost.Price
-            };
+            var _reward = _mapper.Map<Reward>(rewardPostDto);
 
             var reward = await _service.Create(_reward);
 
             return reward == null
                 ? NotFound(new ApiResult<RewardDto>(null, false, "Could not create a reward."))
-                : Ok(new ApiResult<RewardDto>(new RewardDto(reward)));
+                : Ok(new ApiResult<RewardDto>(_mapper.Map<RewardDto>(reward)));
         }
 
-        [HttpPatch("{rewardid}")]
-        public async Task<ActionResult<ApiResult<RewardDto>>> Patch([FromRoute] int rewardid, [FromBody] RewardPostDto rewardPut)
+        [HttpPatch("{rewardId}")]
+        public async Task<ActionResult<ApiResult<RewardDto>>> Patch([FromRoute] int rewardId, [FromBody] RewardPostDto rewardPostDto)
         {
-            var reward = new Reward()
-            {
-                ProjectId = rewardPut.ProjectId,
-                Title = rewardPut.Title,
-                Description = rewardPut.Description,
-                Price = (decimal)rewardPut.Price
-            };
+            var _reward = _mapper.Map<Reward>(rewardPostDto);
 
-            var patchDto = await _service.Update(rewardid, reward);
+            var reward = await _service.Update(rewardId, _reward);
 
-            return patchDto == null
-                ? NotFound(new ApiResult<RewardDto>(null, false, $"No reward found with Id = {rewardid}"))
-                : Ok(new ApiResult<RewardDto>(new RewardDto(patchDto)));
+            return reward == null
+                ? NotFound(new ApiResult<RewardDto>(null, false, $"No reward found with Id = {rewardId}"))
+                : Ok(new ApiResult<RewardDto>(_mapper.Map<RewardDto>(reward)));
         }
 
         [HttpPost("/BuyReward/{rewardId}")]

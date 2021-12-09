@@ -1,4 +1,5 @@
-﻿using FundRaiser.Common.Dto;
+﻿using AutoMapper;
+using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,24 +14,25 @@ namespace FundRaiser.Api.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectService _service;
+        private readonly IMapper _mapper;
 
-        public ProjectsController(IProjectService service)
+        public ProjectsController(IProjectService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<ApiResult<List<ProjectDto>>>> Get(int pageCount, int pageSize, int? userId = null, string title = null, Category? category = null)
         {
-
             var _list = await _service.GetProjects(pageCount, pageSize, userId, title, category);
 
             if (_list.Any() == false)
             {
-                return NotFound(new ApiResult<object>(null,false,"Could not find any project"));
+                return NotFound(new ApiResult<List<ProjectDto>>(null, false, "Could not find any project"));
             }
 
-            var list = _list.Select(l => new ProjectDto(l)).ToList();
+            var list = _list.Select(project => _mapper.Map<ProjectDto>(project)).ToList();
 
             return Ok(new ApiResult<List<ProjectDto>>(list));
         }
@@ -42,7 +44,7 @@ namespace FundRaiser.Api.Controllers
 
             return _project == null
                 ? NotFound(new ApiResult<ProjectDto>(null, false, $"Could not find project with Id = {id}."))
-                : Ok(new ApiResult<ProjectDto>(new ProjectDto(_project)));
+                : Ok(new ApiResult<ProjectDto>(_mapper.Map<ProjectDto>(_project)));
         }
 
         [HttpGet("/FundedByUsers/{Id}")]
@@ -55,8 +57,8 @@ namespace FundRaiser.Api.Controllers
                 return NotFound($"User with id = {Id} has not funded projects.");
             }
 
-            var list = _list.Select(l => new ProjectDto(l)).ToList();
-      
+            var list = _list.Select(project => _mapper.Map<ProjectDto>(project)).ToList();
+
             return Ok(new ApiResult<List<ProjectDto>>(list));
         }
 
@@ -70,40 +72,25 @@ namespace FundRaiser.Api.Controllers
                 return NotFound(new ApiResult<ProjectDto>(null, false, $"Could not find project with Id = {projectId}"));
             }
 
-            var _project = new Project()
-            {
-                Title = projectUpdateDto.Title,
-                Description = projectUpdateDto.Description,
-                Category = projectUpdateDto.Category,
-                Goal = projectUpdateDto.Goal ?? projectDb.Goal,
-                EndDate = projectUpdateDto.EndDate
-            };
+            var _project = _mapper.Map<Project>(projectUpdateDto);
 
             var project = await _service.Update(projectId, _project);
 
-            return Ok(new ApiResult<ProjectDto>(new ProjectDto(project))); 
+            return Ok(new ApiResult<ProjectDto>(_mapper.Map<ProjectDto>(project)));
         }
 
         [HttpPost]
         public async Task<ActionResult<ApiResult<ProjectDto>>> Post(ProjectPostDto projectDto)
         {
-            var _project = new Project()
-            {
-                UserId = projectDto.UserId,
-                Title = projectDto.Title,
-                Description = projectDto.Description,
-                Category = projectDto.Category,
-                Goal = (decimal)projectDto.Goal,
-                EndDate = projectDto.EndDate
-            };
+            var _project = _mapper.Map<Project>(projectDto);
 
             var project = await _service.Create(_project);
 
             return project == null
                 ? NotFound(new ApiResult<ProjectDto>(null, false, "Could not create project."))
-                : Ok(new ApiResult<ProjectDto>(new ProjectDto(project)));
+                : Ok(new ApiResult<ProjectDto>(_mapper.Map<ProjectDto>(project)));
         }
-        
+
         [HttpDelete("{id}")]
         public async Task<ActionResult<ApiResult<object>>> Delete(int id)
         {

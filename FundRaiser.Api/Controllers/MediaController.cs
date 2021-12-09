@@ -22,7 +22,7 @@ namespace FundRaiser.Api.Controllers
         private readonly IProjectService _projectService;
         private const string videoExtension = "mp4";
         private const string imageExtension = "jpg";
-        
+
         private string startUpPath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory())?.ToString();
 
         public MediaController(IMediaService mediaService, StorageSettings settings, IProjectService projectService)
@@ -37,13 +37,13 @@ namespace FundRaiser.Api.Controllers
         {
             var media = await _mediaService.GetMediaById(mediaId);
 
-            return media == null 
-                ? NotFound (new ApiResult<MediaDto>(null, false, "No media found for corresponding id") )
+            return media == null
+                ? NotFound(new ApiResult<MediaDto>(null, false, "No media found for corresponding id"))
                 : Ok(new ApiResult<MediaDto>(new MediaDto(media, startUpPath)));
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult<ApiResult<IEnumerable<MediaDto>>>> Upload([Required] List<IFormFile> files, [FromForm] [Required] int projectId)
+        public async Task<ActionResult<ApiResult<IEnumerable<MediaDto>>>> Upload([Required] List<IFormFile> files, [FromForm][Required] int projectId)
         {
             if (await _projectService.GetProject(projectId) == null)
             {
@@ -51,7 +51,7 @@ namespace FundRaiser.Api.Controllers
             }
 
             var mediaList = new List<Media>();
-            
+
 
             long size = files.Sum(f => f.Length);
             foreach (var formFile in files)
@@ -62,38 +62,40 @@ namespace FundRaiser.Api.Controllers
 
                     if (!success)
                         break;
-                    
-                    using(var stream = System.IO.File.Create($"{startUpPath}{media.Path}"))
+
+                    using (var stream = System.IO.File.Create($"{startUpPath}{media.Path}"))
                     {
                         await formFile.CopyToAsync(stream);
                     }
-                    
+
                     mediaList.Add(media);
                 }
             }
-
-            //Add media into db
-            await _mediaService.Create(mediaList);
             
+            await _mediaService.Create(mediaList);
+
             return Ok(new ApiResult<IEnumerable<MediaDto>>(mediaList.Select(m => new MediaDto(m, startUpPath))));
         }
 
         private (bool success, Media media) GenerateMediaAndPath(IFormFile formFile, int projectId)
         {
             if (formFile.ContentType.ToLower().Contains("video"))
-                return 
-                (   true,
-                    new Media
-                    {
-                        Path = $"{_settings.BasePath}{_settings.VideoPath}/{Guid.NewGuid()}.{videoExtension}",
-                        ProjectId = projectId,
-                        MediaType = MediaType.Video
-                    }
-                );
-            
-            if(formFile.ContentType.ToLower().Contains("image"))
-                return 
-                    (   true,
+            {
+                return
+                    (true,
+                        new Media
+                        {
+                            Path = $"{_settings.BasePath}{_settings.VideoPath}/{Guid.NewGuid()}.{videoExtension}",
+                            ProjectId = projectId,
+                            MediaType = MediaType.Video
+                        }
+                    );
+            }
+
+            if (formFile.ContentType.ToLower().Contains("image"))
+            {
+                return
+                    (true,
                         new Media
                         {
                             Path = $"{_settings.BasePath}{_settings.ImagesPath}/{Guid.NewGuid()}.{imageExtension}",
@@ -101,7 +103,8 @@ namespace FundRaiser.Api.Controllers
                             MediaType = MediaType.Image
                         }
                     );
-            
+            }
+
             return (false, null);
         }
     }

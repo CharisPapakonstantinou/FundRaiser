@@ -1,4 +1,5 @@
-﻿using FundRaiser.Common.Dto;
+﻿using AutoMapper;
+using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace FundRaiser.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService service)
+        public UsersController(IUserService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet("{id}")]
@@ -24,39 +27,31 @@ namespace FundRaiser.Api.Controllers
 
             return user == null
                 ? NotFound(new ApiResult<UserDto>(null, false, $"No user found with Id = {id}."))
-                : Ok(new ApiResult<UserDto>(new UserDto(user)));
+                : Ok(new ApiResult<UserDto>(_mapper.Map<UserDto>(user)));
         }
 
         [HttpPost]
         public async Task<ActionResult<ApiResult<UserDto>>> Post(UserPostDto userPost)
         {
-            var _user = new User()
-            {
-                FirstName = userPost.FirstName,
-                LastName = userPost.LastName
-            };
+            var _user = _mapper.Map<User>(userPost);
 
             var user = await _service.Create(_user);
 
             return user == null
                ? NotFound(new ApiResult<UserDto>(null, false, "Could not create user."))
-               : Ok(new ApiResult<UserDto>(new UserDto(user)));
+               : Ok(new ApiResult<UserDto>(_mapper.Map<UserDto>(user)));
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<ApiResult<UserDto>>> Patch([FromRoute] int id, [FromBody] UserPostDto userPut)
+        public async Task<ActionResult<ApiResult<UserDto>>> Patch([FromRoute] int id, [FromBody] UserPostDto userPatch)
         {
-            var _user = new User()
-            {
-                FirstName = userPut.FirstName,
-                LastName = userPut.LastName
-            };
+            var _user = _mapper.Map<User>(userPatch);
 
             var user = await _service.Update(id, _user);
 
             return user == null
                 ? NotFound(new ApiResult<UserDto>(null, false, $"No user found with Id = {id}."))
-                : Ok(new ApiResult<UserDto>(new UserDto(user)));
+                : Ok(new ApiResult<UserDto>(_mapper.Map<UserDto>(user)));
         }
 
         [HttpDelete("{id}")]
