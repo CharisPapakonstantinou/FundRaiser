@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,14 @@ namespace FundRaiser.Api
             
             services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddScoped<IRewardService, RewardService>();
+            services.AddScoped<IUpdateService, UpdateService>();
+            services.AddScoped<IUserService, UserService>();
+
+            services.Configure<RouteOptions>(options =>
+            {
+                options.LowercaseUrls = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

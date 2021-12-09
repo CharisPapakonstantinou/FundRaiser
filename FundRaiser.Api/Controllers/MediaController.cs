@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FundRaiser.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class MediaController : Controller
     {
         private readonly StorageSettings _settings;
@@ -32,22 +32,24 @@ namespace FundRaiser.Api.Controllers
             _projectService = projectService;
         }
 
-        [HttpGet("GetMedia")]
-        public async Task<ApiResult<MediaDto>> GetMedia([Required] int mediaId)
+        [HttpGet]
+        public async Task<ActionResult<ApiResult<MediaDto>>> Get([Required] int mediaId)
         {
             var media = await _mediaService.GetMediaById(mediaId);
 
             return media == null 
-                ? new ApiResult<MediaDto>(null, false, "No media found for corresponding id") 
-                : new ApiResult<MediaDto>(new MediaDto(media, startUpPath));
+                ? NotFound (new ApiResult<MediaDto>(null, false, "No media found for corresponding id") )
+                : Ok(new ApiResult<MediaDto>(new MediaDto(media, startUpPath)));
         }
         
-        [HttpPost("Upload")]
-        public async Task<ApiResult<IEnumerable<MediaDto>>> Upload([Required] List<IFormFile> files, [FromForm] [Required] int projectId)
+        [HttpPost]
+        public async Task<ActionResult<ApiResult<IEnumerable<MediaDto>>>> Upload([Required] List<IFormFile> files, [FromForm] [Required] int projectId)
         {
             if (await _projectService.GetProject(projectId) == null)
-                throw new Exception($"Not found project for id {projectId}");
-            
+            {
+                return NotFound(($"Not found project for id {projectId}"));
+            }
+
             var mediaList = new List<Media>();
             
 
@@ -69,11 +71,11 @@ namespace FundRaiser.Api.Controllers
                     mediaList.Add(media);
                 }
             }
-            
+
             //Add media into db
             await _mediaService.Create(mediaList);
             
-            return new ApiResult<IEnumerable<MediaDto>>(mediaList.Select(m => new MediaDto(m, startUpPath)));
+            return Ok(new ApiResult<IEnumerable<MediaDto>>(mediaList.Select(m => new MediaDto(m, startUpPath))));
         }
 
         private (bool success, Media media) GenerateMediaAndPath(IFormFile formFile, int projectId)
