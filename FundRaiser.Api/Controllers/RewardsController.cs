@@ -20,7 +20,7 @@ namespace FundRaiser.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResult<List<RewardDto>>>> Get([FromRoute] int projectId)
+        public async Task<ActionResult<ApiResult<List<RewardDto>>>> Get(int projectId)
         {
             var tempList = await _service.GetRewards(projectId);
 
@@ -35,7 +35,7 @@ namespace FundRaiser.Api.Controllers
         }
 
         [HttpGet("/BackersReward")]
-        public async Task<ActionResult<ApiResult<List<RewardDto>>>> Get([FromRoute] int userId, int projectId)
+        public async Task<ActionResult<ApiResult<List<RewardDto>>>> Get( int userId, int projectId)
         {
             var tempList = await _service.GetBackerRewards(userId, projectId);
 

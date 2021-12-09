@@ -20,7 +20,7 @@ namespace FundRaiser.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResult<List<UpdateDto>>>> Get([FromRoute] int projectId)
+        public async Task<ActionResult<ApiResult<List<UpdateDto>>>> Get( int projectId)
         {
             var tempList = await _service.GetUpdates(projectId);
             

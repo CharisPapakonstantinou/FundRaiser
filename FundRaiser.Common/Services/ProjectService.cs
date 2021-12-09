@@ -70,6 +70,9 @@ namespace FundRaiser.Common.Services
             if (pageCount <= 0) pageCount = 1;
             
             return await _context.Projects 
+                .Include(p=>p.Media)
+                .Include(p=>p.Updates)
+                .Include(p=>p.Rewards)
                 .Where(p =>
                     (userId == null || p.UserId == userId)
                     && (title == null || p.Title.ToLower().Contains(title.ToLower()))
