@@ -47,7 +47,7 @@ namespace FundRaiser.Api.Controllers
         {
             var media = await _mediaService.GetMediaById(id);
 
-            Byte[] b = System.IO.File.ReadAllBytes($"{Directory.GetParent(Environment.CurrentDirectory)}/{media.Path}");
+            Byte[] b = await System.IO.File.ReadAllBytesAsync($"{Directory.GetParent(Environment.CurrentDirectory)}/{media.Path}");
 
             return File(b, media.MediaType == MediaType.Image ? "image/jpeg" : "video/mp4");
         }
