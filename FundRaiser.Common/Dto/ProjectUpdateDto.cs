@@ -3,7 +3,7 @@ using System;
 
 namespace FundRaiser.Common.Dto
 {
-    public class ProjectUpdateDto
+    public class ProjectPatchDto
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -11,9 +11,9 @@ namespace FundRaiser.Common.Dto
         public decimal? Goal { get; set; }
         public DateTime EndDate { get; set; }
 
-        public ProjectUpdateDto() { }
+        public ProjectPatchDto() { }
 
-        public ProjectUpdateDto(Project project)
+        public ProjectPatchDto(Project project)
         {
             Title = project.Title;
             Description = project.Description;

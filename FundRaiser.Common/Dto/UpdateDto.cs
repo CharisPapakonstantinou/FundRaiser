@@ -8,7 +8,7 @@ namespace FundRaiser.Common.Dto
         public int Id { get; set; }
         public int ProjectId { get; set; }
         public string Title { get; set; }
-        public string Descripiton { get; set; }
+        public string Description { get; set; }
         public DateTime PostDate { get; set; }
 
         public UpdateDto() { }
@@ -18,7 +18,7 @@ namespace FundRaiser.Common.Dto
             Id = update.Id;
             ProjectId = update.ProjectId;
             Title = update.Title;
-            Descripiton = update.Description;
+            Description = update.Description;
             PostDate = update.PostDate;
         }
     }

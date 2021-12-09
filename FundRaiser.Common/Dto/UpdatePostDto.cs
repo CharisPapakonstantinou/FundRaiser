@@ -7,7 +7,7 @@ namespace FundRaiser.Common.Dto
     {
         public int ProjectId { get; set; }
         public string Title { get; set; }
-        public string Descripiton { get; set; }
+        public string Description { get; set; }
        
         public UpdatePostDto() { }
 
@@ -15,7 +15,7 @@ namespace FundRaiser.Common.Dto
         {
             ProjectId = update.ProjectId;
             Title = update.Title;
-            Descripiton = update.Description;
+            Description = update.Description;
         }
     }
 }
