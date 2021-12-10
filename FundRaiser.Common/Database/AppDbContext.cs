@@ -2,27 +2,26 @@ using FundRaiser.Common.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FundRaiser.Common.Database
 {
     public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
+        private readonly IConfiguration _config;
+        public AppDbContext(DbContextOptions options, IConfiguration config) : base(options)
+        {
+            _config = config;
+        }
+        
+        public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Reward> Rewards { get; set; }
         public DbSet<Update> Updates { get; set; }
         public DbSet<Media> Media { get; set; }
-
         public DbSet<Fund> Funds { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server = localhost; Initial Catalog = 'FundRaiser'; User Id = SA; Password=admin!@#123");
-        }
         
-        public AppDbContext() : base() { }
-        
-        public AppDbContext(DbContextOptions<AppDbContext> options): base(options){}
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

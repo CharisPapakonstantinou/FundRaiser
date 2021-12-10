@@ -11,7 +11,7 @@ namespace FundRaiser.Common.Models
         //Base properties
         public string Title { get; set; }
         public string Description { get; set; }
-        public decimal RequiredAmount { get; set; }
+        public decimal Price { get; set; }
         
         //Navigation properties
         public List<Fund> Funds { get; set; }

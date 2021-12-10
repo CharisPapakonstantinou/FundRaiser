@@ -50,7 +50,7 @@ namespace FundRaiser.Mvc.Controllers
         [Route("Reward/Buy/{rewardId}/{projectId}")]
         public async Task<IActionResult> Buy(int rewardId, int projectId)
         {
-            var bought = await _rewardService.BuyReward(int.Parse(_userManager.GetUserId(User)), rewardId, projectId);
+            var bought = await _rewardService.BuyReward(int.Parse(_userManager.GetUserId(User)), rewardId);
             return RedirectToAction("ProjectView", "Project", new { projectId = projectId });
         }
     }
