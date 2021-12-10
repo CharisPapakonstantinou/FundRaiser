@@ -1,4 +1,5 @@
 ﻿using FundRaiser.Common.Database;
+using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +34,24 @@ namespace FundRaiser.Common.Services
             project.Title = projectModel.Title ?? project.Title;
             project.Category = projectModel.Category;
             project.Description = projectModel.Description ?? project.Description;
-            project.Goal = projectModel.Goal;
+            project.Goal = projectModel.Goal == 0 ? project.Goal : projectModel.Goal;
             project.EndDate = projectModel.EndDate;
+
+            await _context.SaveChangesAsync();
+
+            return project;
+        }
+
+        public async Task<Project> Update(int id, ProjectPatchDto projectPatchDto)
+        {
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
+
+            //Map base info
+            project.Title = projectPatchDto.Title ?? project.Title;
+            project.Category = projectPatchDto.Category ?? project.Category;
+            project.Description = projectPatchDto.Description ?? project.Description;
+            project.Goal = projectPatchDto.Goal ?? project.Goal;
+            project.EndDate = projectPatchDto.EndDate ?? project.EndDate;
 
             await _context.SaveChangesAsync();
 

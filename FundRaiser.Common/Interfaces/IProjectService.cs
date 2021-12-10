@@ -1,4 +1,5 @@
-﻿using FundRaiser.Common.Models;
+﻿using FundRaiser.Common.Dto;
+using FundRaiser.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace FundRaiser.Common.Interfaces
         Task<List<Project>> GetProjects(int pageCount, int pageSize, int? userId = null, string title = null, Category? category = null);
         Task<List<Project>> GetFundedProjects(int userId);
         Task<List<Project>> GetTopFundedProjects(int count);
+        Task<Project> Update(int id, ProjectPatchDto projectPatchDto);
     }
 }
