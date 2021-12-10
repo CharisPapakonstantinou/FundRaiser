@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FundRaiser.Mvc", "FundRaiser.Mvc\FundRaiser.Mvc.csproj", "{C3FB0E2B-6EE5-4AFA-9DCF-CC5AAC1572C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FundRaiser.Mvc", "FundRaiser.Mvc\FundRaiser.Mvc.csproj", "{C3FB0E2B-6EE5-4AFA-9DCF-CC5AAC1572C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FundRaiser.Common", "FundRaiser.Common\FundRaiser.Common.csproj", "{571B5EA2-190E-484D-AC81-7B795934FACB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FundRaiser.Common", "FundRaiser.Common\FundRaiser.Common.csproj", "{571B5EA2-190E-484D-AC81-7B795934FACB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FundRaiser.Api", "FundRaiser.Api\FundRaiser.Api.csproj", "{C39378E1-979F-46E5-A965-812561A3E758}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FundRaiser.Api", "FundRaiser.Api\FundRaiser.Api.csproj", "{C39378E1-979F-46E5-A965-812561A3E758}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C3FB0E2B-6EE5-4AFA-9DCF-CC5AAC1572C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,5 +55,11 @@ Global
 		{C39378E1-979F-46E5-A965-812561A3E758}.Release|x64.Build.0 = Release|Any CPU
 		{C39378E1-979F-46E5-A965-812561A3E758}.Release|x86.ActiveCfg = Release|Any CPU
 		{C39378E1-979F-46E5-A965-812561A3E758}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4BBAD74-16F2-41CF-8390-6ED865364C0E}
 	EndGlobalSection
 EndGlobal

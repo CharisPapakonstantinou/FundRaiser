@@ -1,0 +1,51 @@
+﻿@model FundRaiser.Mvc.ViewModels.ProjectCreateViewModel
+@{
+    ViewData["Title"] = "Create Project";
+}
+
+<h1 class="row justify-content-center">Create Project</h1>
+
+<div class="row justify-content-center">
+    <div class="col-sm-6 col-md-4">
+        <form method="post" enctype='multipart/form-data'>
+            <div class="form-group">
+                <label asp-for="Title"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" rows="6" cols="70"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category"></label>
+                <select asp-for="Category" asp-items="Html.GetEnumSelectList<FundRaiser.Common.Models.Category>()" class="form-control">
+                    <option selected="selected" value="">Select category</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate"></label>
+                <input type="date" asp-for="EndDate" class="form-control" name="endDate" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Goal"></label>
+                <input asp-for="Goal" class="form-control" />
+                <span asp-validation-for="Goal" class="text-danger"></span>
+            </div>
+            <dl>
+                <dt>
+                    <label asp-for="ProductImage"></label>
+                </dt>
+                <dd>
+                    <input asp-for="ProductImage" type="file">
+                    <span asp-validation-for="ProductImage"></span>
+                </dd>
+            </dl>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+
+    </div>
+</div>

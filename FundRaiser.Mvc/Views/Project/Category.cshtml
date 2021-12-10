@@ -1,11 +1,10 @@
 ﻿@model List<FundRaiser.Common.Models.Project>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categories";
 }
 
 <div class="text-center mb-4">
-    <h1 class="display-4">Fund Raiser</h1>
-    <h3>Check all available projects and make your fund.</h3>
+    <h4>@((FundRaiser.Common.Models.Category) Convert.ToInt32(Context.Request.RouteValues["id"])) Projects</h4>
 </div>
 <div class="row">
     @foreach (var project in Model)
@@ -20,7 +19,7 @@
                 {
                     <img src="images/no_image.jpg" title="project image" />
                 }
-                
+
                 <div class="card-header">
                     <h4>@project.CurrentAmount / @project.Goal</h4>
                     <progress value="@(project.CurrentAmount/project.Goal*100)" , max="100"></progress>
