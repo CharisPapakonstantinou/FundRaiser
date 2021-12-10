@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using FundRaiser.Common.Dto;
+﻿using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
-using FundRaiser.Common.Models;
+using FundRaiser.Common.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +13,10 @@ namespace FundRaiser.Api.Controllers
     public class UpdatesController : ControllerBase
     {
         private readonly IUpdateService _service;
-        private readonly IMapper _mapper;
 
-        public UpdatesController(IUpdateService service, IMapper mapper)
+        public UpdatesController(IUpdateService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -32,33 +29,33 @@ namespace FundRaiser.Api.Controllers
                 return NotFound(new ApiResult<List<UpdateDto>>(null, false, $"No updates found for project with Id = {projectId}"));
             }
 
-            var updatesList = tempList.Select(update => _mapper.Map<UpdateDto>(update)).ToList();
+            var updatesList = tempList.Select(update => MyMapper.UpdateToUpdateDto(update)).ToList();
 
             return Ok(new ApiResult<List<UpdateDto>>(updatesList));
         }
 
         [HttpPost]
-        public async Task<ActionResult<ApiResult<UpdateDto>>> Post([FromBody] UpdatePostDto updatePost)
+        public async Task<ActionResult<ApiResult<UpdateDto>>> Post([FromBody] UpdatePostDto updatePostDto)
         {
-            var _update = _mapper.Map<Update>(updatePost);
+            var _update = MyMapper.UpdatePostDtoToUpdate(updatePostDto);
 
             var update = await _service.Create(_update);
 
             return update == null
                 ? NotFound(new ApiResult<UpdateDto>(null, false, $"Could not create update."))
-                : Ok(new ApiResult<UpdateDto>(_mapper.Map<UpdateDto>(update)));
+                : Ok(new ApiResult<UpdateDto>(MyMapper.UpdateToUpdateDto(update)));
         }
 
         [HttpPatch("{updateId}")]
-        public async Task<ActionResult<ApiResult<UpdateDto>>> Patch([FromRoute] int updateId, UpdatePatchDto updatePatch)
+        public async Task<ActionResult<ApiResult<UpdateDto>>> Patch([FromRoute] int updateId, UpdatePatchDto updatePatchDto)
         {
-            var _update = _mapper.Map<Update>(updatePatch);
-
+            var _update = MyMapper.UpdatePatchDtoToUpdate(updatePatchDto);
+            
             var update = await _service.Update(updateId, _update);
 
             return update == null
                 ? NotFound(new ApiResult<UpdateDto>(null, false, $"No update found with Id = {updateId}"))
-                : Ok(new ApiResult<UpdateDto>(_mapper.Map<UpdateDto>(update)));
+                : Ok(new ApiResult<UpdateDto>(MyMapper.UpdateToUpdateDto(update)));
         }
 
         [HttpDelete("{updateId}")]

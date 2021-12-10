@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using FundRaiser.Common.Dto;
+﻿using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
-using FundRaiser.Common.Models;
+using FundRaiser.Common.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +13,10 @@ namespace FundRaiser.Api.Controllers
     public class RewardsController : ControllerBase
     {
         private readonly IRewardService _service;
-        private readonly IMapper _mapper;
-        public RewardsController(IRewardService service, IMapper mapper)
+
+        public RewardsController(IRewardService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -31,7 +29,7 @@ namespace FundRaiser.Api.Controllers
                 return NotFound(new ApiResult<List<RewardDto>>(null, false, $"Could not find rewards for project with Id = {projectId}."));
             }
 
-            var rewardsList = tempList.Select(reward => _mapper.Map<RewardDto>(reward)).ToList();
+            var rewardsList = tempList.Select(reward => MyMapper.RewardToRewardDto(reward)).ToList();
 
             return Ok(new ApiResult<List<RewardDto>>(rewardsList));
         }
@@ -46,7 +44,7 @@ namespace FundRaiser.Api.Controllers
                 return new ApiResult<List<RewardDto>>(null, false, $"User with Id = {userId} has not purchase any reward for the project with Id = {projectId}");
             }
 
-            var rewardsList = tempList.Select(reward => _mapper.Map<RewardDto>(reward)).ToList();
+            var rewardsList = tempList.Select(reward => MyMapper.RewardToRewardDto(reward)).ToList();
 
             return Ok(new ApiResult<List<RewardDto>>(rewardsList));
         }
@@ -54,25 +52,25 @@ namespace FundRaiser.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiResult<RewardDto>>> Post(RewardPostDto rewardPostDto)
         {
-            var _reward = _mapper.Map<Reward>(rewardPostDto);
+            var _reward = MyMapper.RewardPostDtoToReward(rewardPostDto);
 
             var reward = await _service.Create(_reward);
 
             return reward == null
                 ? NotFound(new ApiResult<RewardDto>(null, false, "Could not create a reward."))
-                : Ok(new ApiResult<RewardDto>(_mapper.Map<RewardDto>(reward)));
+                : Ok(new ApiResult<RewardDto>(MyMapper.RewardToRewardDto(reward)));
         }
 
         [HttpPatch("{rewardId}")]
         public async Task<ActionResult<ApiResult<RewardDto>>> Patch([FromRoute] int rewardId, [FromBody] RewardPostDto rewardPostDto)
         {
-            var _reward = _mapper.Map<Reward>(rewardPostDto);
+            var _reward = MyMapper.RewardPostDtoToReward(rewardPostDto);
 
             var reward = await _service.Update(rewardId, _reward);
 
             return reward == null
                 ? NotFound(new ApiResult<RewardDto>(null, false, $"No reward found with Id = {rewardId}"))
-                : Ok(new ApiResult<RewardDto>(_mapper.Map<RewardDto>(reward)));
+                : Ok(new ApiResult<RewardDto>(MyMapper.RewardToRewardDto(reward)));
         }
 
         [HttpPost("/BuyReward/{rewardId}")]

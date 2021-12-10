@@ -1,7 +1,6 @@
-using System;
-using FundRaiser.Common.ConfigMappers;
 using FundRaiser.Common.Database;
 using FundRaiser.Common.Interfaces;
+using FundRaiser.Common.Mappers.ConfigMappers;
 using FundRaiser.Common.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,7 +49,6 @@ namespace FundRaiser.Api
                 options.LowercaseUrls = true;
             });
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

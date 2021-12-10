@@ -60,6 +60,7 @@ namespace FundRaiser.Common.Services
             .Include(u => u.Funds)
             .ThenInclude (u => u.Reward)
             .ThenInclude(u => u.Project)
+            .ThenInclude(u=>u.Updates)
             .FirstOrDefaultAsync(u => u.Id == id);
             
             return user;

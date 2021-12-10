@@ -1,5 +1,4 @@
-﻿using FundRaiser.Common.Models;
-using System;
+﻿using System;
 
 namespace FundRaiser.Common.Dto
 {
@@ -10,16 +9,6 @@ namespace FundRaiser.Common.Dto
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime PostDate { get; set; }
-
-        public UpdateDto() { }
         
-        public UpdateDto(Update update)
-        {
-            Id = update.Id;
-            ProjectId = update.ProjectId;
-            Title = update.Title;
-            Description = update.Description;
-            PostDate = update.PostDate;
-        }
     }
 }

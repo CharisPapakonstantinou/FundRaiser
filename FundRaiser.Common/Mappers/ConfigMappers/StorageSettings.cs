@@ -1,4 +1,4 @@
-namespace FundRaiser.Common.ConfigMappers
+namespace FundRaiser.Common.Mappers.ConfigMappers
 {
     public class StorageSettings
     {

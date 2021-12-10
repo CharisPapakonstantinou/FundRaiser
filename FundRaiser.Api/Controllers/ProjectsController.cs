@@ -1,9 +1,10 @@
-﻿using AutoMapper;
-using FundRaiser.Common.Dto;
+﻿using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
+using FundRaiser.Common.Mappers;
 using FundRaiser.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,12 +15,10 @@ namespace FundRaiser.Api.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectService _service;
-        private readonly IMapper _mapper;
 
-        public ProjectsController(IProjectService service, IMapper mapper)
+        public ProjectsController(IProjectService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -32,7 +31,7 @@ namespace FundRaiser.Api.Controllers
                 return NotFound(new ApiResult<List<ProjectDto>>(null, false, "Could not find any project"));
             }
 
-            var list = _list.Select(project => _mapper.Map<ProjectDto>(project)).ToList();
+            var list = _list.Select(project => MyMapper.ProjectToProjectDto(project)).ToList();
 
             return Ok(new ApiResult<List<ProjectDto>>(list));
         }
@@ -44,7 +43,7 @@ namespace FundRaiser.Api.Controllers
 
             return _project == null
                 ? NotFound(new ApiResult<ProjectDto>(null, false, $"Could not find project with Id = {id}."))
-                : Ok(new ApiResult<ProjectDto>(_mapper.Map<ProjectDto>(_project)));
+                : Ok(new ApiResult<ProjectDto>(MyMapper.ProjectToProjectDto(_project)));
         }
 
         [HttpGet("/FundedByUsers/{Id}")]
@@ -52,18 +51,18 @@ namespace FundRaiser.Api.Controllers
         {
             var _list = await _service.GetFundedProjects(Id);
 
-            if (_list == null)
+            if (_list.Any() == false)
             {
                 return NotFound($"User with id = {Id} has not funded projects.");
             }
 
-            var list = _list.Select(project => _mapper.Map<ProjectDto>(project)).ToList();
+            var list = _list.Select(project => MyMapper.ProjectToProjectDto(project)).ToList();
 
             return Ok(new ApiResult<List<ProjectDto>>(list));
         }
 
         [HttpPatch]
-        public async Task<ActionResult<ApiResult<ProjectDto>>> Patch(int projectId, ProjectUpdateDto projectUpdateDto)
+        public async Task<ActionResult<ApiResult<ProjectDto>>> Patch([Required] int projectId, ProjectPatchDto projectPatchDto)
         {
             var projectDb = await _service.GetProject(projectId);
 
@@ -72,23 +71,21 @@ namespace FundRaiser.Api.Controllers
                 return NotFound(new ApiResult<ProjectDto>(null, false, $"Could not find project with Id = {projectId}"));
             }
 
-            var _project = _mapper.Map<Project>(projectUpdateDto);
+            var project = await _service.Update(projectId, projectPatchDto);
 
-            var project = await _service.Update(projectId, _project);
-
-            return Ok(new ApiResult<ProjectDto>(_mapper.Map<ProjectDto>(project)));
+            return Ok(new ApiResult<ProjectDto>(MyMapper.ProjectToProjectDto(project)));
         }
 
         [HttpPost]
-        public async Task<ActionResult<ApiResult<ProjectDto>>> Post(ProjectPostDto projectDto)
+        public async Task<ActionResult<ApiResult<ProjectDto>>> Post(ProjectPostDto projectPostDto)
         {
-            var _project = _mapper.Map<Project>(projectDto);
+            var _project = MyMapper.ProjectPostDtoToProject(projectPostDto);
 
             var project = await _service.Create(_project);
 
             return project == null
                 ? NotFound(new ApiResult<ProjectDto>(null, false, "Could not create project."))
-                : Ok(new ApiResult<ProjectDto>(_mapper.Map<ProjectDto>(project)));
+                : Ok(new ApiResult<ProjectDto>(MyMapper.ProjectToProjectDto(_project)));
         }
 
         [HttpDelete("{id}")]

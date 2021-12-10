@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using FundRaiser.Common.Dto;
+﻿using FundRaiser.Common.Dto;
 using FundRaiser.Common.Interfaces;
-using FundRaiser.Common.Models;
+using FundRaiser.Common.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -11,13 +10,11 @@ namespace FundRaiser.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _service;
-        private readonly IMapper _mapper;
+        private readonly IUserService _service;      
 
-        public UsersController(IUserService service, IMapper mapper)
+        public UsersController(IUserService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         [HttpGet("{id}")]
@@ -27,31 +24,31 @@ namespace FundRaiser.Api.Controllers
 
             return user == null
                 ? NotFound(new ApiResult<UserDto>(null, false, $"No user found with Id = {id}."))
-                : Ok(new ApiResult<UserDto>(_mapper.Map<UserDto>(user)));
+                : Ok(new ApiResult<UserDto>(MyMapper.UserToUserDto(user)));
         }
 
         [HttpPost]
-        public async Task<ActionResult<ApiResult<UserDto>>> Post(UserPostDto userPost)
+        public async Task<ActionResult<ApiResult<UserDto>>> Post(UserPostDto userPostDto)
         {
-            var _user = _mapper.Map<User>(userPost);
-
+            var _user = MyMapper.UserPostDtoToUser(userPostDto);
+            
             var user = await _service.Create(_user);
 
             return user == null
                ? NotFound(new ApiResult<UserDto>(null, false, "Could not create user."))
-               : Ok(new ApiResult<UserDto>(_mapper.Map<UserDto>(user)));
+               : Ok(new ApiResult<UserDto>(MyMapper.UserToUserDto(user)));
         }
 
         [HttpPatch("{id}")]
         public async Task<ActionResult<ApiResult<UserDto>>> Patch([FromRoute] int id, [FromBody] UserPostDto userPatch)
         {
-            var _user = _mapper.Map<User>(userPatch);
+            var _user = MyMapper.UserPostDtoToUser(userPatch);
 
             var user = await _service.Update(id, _user);
 
             return user == null
                 ? NotFound(new ApiResult<UserDto>(null, false, $"No user found with Id = {id}."))
-                : Ok(new ApiResult<UserDto>(_mapper.Map<UserDto>(user)));
+                : Ok(new ApiResult<UserDto>(MyMapper.UserToUserDto(user)));
         }
 
         [HttpDelete("{id}")]
