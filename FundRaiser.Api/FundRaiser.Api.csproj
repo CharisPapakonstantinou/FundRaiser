@@ -12,4 +12,9 @@
       <ProjectReference Include="..\FundRaiser.Common\FundRaiser.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Storage\Images" />
+      <Folder Include="Storage\Video" />
+    </ItemGroup>
+
 </Project>

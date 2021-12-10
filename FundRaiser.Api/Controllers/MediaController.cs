@@ -10,6 +10,7 @@ using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace FundRaiser.Api.Controllers
 {
@@ -17,15 +18,15 @@ namespace FundRaiser.Api.Controllers
     [Route("api/[controller]")]
     public class MediaController : Controller
     {
+        private readonly IHostEnvironment _hostEnvironment;
+
         private readonly StorageSettings _settings;
         private readonly IMediaService _mediaService;
         private readonly IProjectService _projectService;
         private const string videoExtension = "mp4";
         private const string imageExtension = "jpg";
-
-        private string startUpPath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory())?.ToString();
-
-        public MediaController(IMediaService mediaService, StorageSettings settings, IProjectService projectService)
+        
+        public MediaController(IMediaService mediaService, StorageSettings settings, IProjectService projectService, IHostEnvironment _hostEnvironment)
         {
             _settings = settings;
             _mediaService = mediaService;
@@ -39,7 +40,7 @@ namespace FundRaiser.Api.Controllers
 
             return media == null
                 ? NotFound(new ApiResult<MediaDto>(null, false, "No media found for corresponding id"))
-                : Ok(new ApiResult<MediaDto>(new MediaDto(media, startUpPath)));
+                : Ok(new ApiResult<MediaDto>(new MediaDto(media, _hostEnvironment.ContentRootPath)));
         }
 
         [HttpGet("Content")]
@@ -50,7 +51,7 @@ namespace FundRaiser.Api.Controllers
             if (media == null)
                 NotFound(new ApiResult<MediaDto>(null, false, "No media found for corresponding id"));
                     
-            Byte[] b = await System.IO.File.ReadAllBytesAsync($"{Environment.CurrentDirectory}/{media.Path}");
+            Byte[] b = await System.IO.File.ReadAllBytesAsync($"{_hostEnvironment.ContentRootPath}/{media.Path}");
 
             return File(b, media.MediaType == MediaType.Image ? "image/jpeg" : "video/mp4");
         }
@@ -77,7 +78,7 @@ namespace FundRaiser.Api.Controllers
                     if (!success)
                         break;
 
-                    using (var stream = System.IO.File.Create($"{startUpPath}{media.Path}"))
+                    using (var stream = System.IO.File.Create($"{_hostEnvironment.ContentRootPath}{media.Path}"))
                     {
                         await formFile.CopyToAsync(stream);
                     }
@@ -89,7 +90,7 @@ namespace FundRaiser.Api.Controllers
             //Add media into db
             await _mediaService.Create(mediaList);
 
-            return Ok(new ApiResult<IEnumerable<MediaDto>>(mediaList.Select(m => new MediaDto(m, startUpPath))));
+            return Ok(new ApiResult<IEnumerable<MediaDto>>(mediaList.Select(m => new MediaDto(m, _hostEnvironment.ContentRootPath))));
         }
 
         private (bool success, Media media) GenerateMediaAndPath(IFormFile formFile, int projectId)
