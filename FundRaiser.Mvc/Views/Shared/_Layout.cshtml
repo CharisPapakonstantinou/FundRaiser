@@ -29,12 +29,6 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
                     </li>
                 </ul>
-                <div class="form-group">
-                    <form class="d-flex pt-3">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
-                    </form>
-                </div>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="dropdown">
@@ -44,7 +38,6 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" asp-area="" asp-controller="Project" asp-action="Create">Create Project</a>
                             <a class="dropdown-item" asp-area="" asp-controller="Project" asp-action="Dashboard">My Projects</a>
-                            <a class="dropdown-item" href="#">My Funds</a>
                             <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                         </div>
                     </div>

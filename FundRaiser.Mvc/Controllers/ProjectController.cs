@@ -141,6 +141,9 @@ namespace FundRaiser.Mvc.Controllers
         public async Task<IActionResult> ProjectView(int projectId)
         {
             var project = await _projectService.GetProject(projectId);
+            var user = await _userManager.FindByIdAsync(project.UserId.ToString());
+            ViewBag.FirstName = user.FirstName;
+            ViewBag.LastName = user.LastName;
             ViewBag.Updates = await _updateService.GetUpdates(projectId);
             ViewBag.Rewards = await _rewardService.GetRewards(projectId);
             return View(project);
