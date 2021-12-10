@@ -18,13 +18,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#rewards" role="tab" aria-controls="rewards" aria-selected="false">Rewards</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#statistics" role="tab" aria-controls="statistics" aria-selected="false">Statistics</a>
+                    </li>
                 </ul>
             </div>
             <div class="card-body">
                 <div class="tab-content mt-3">
                     <div class="tab-pane active" id="description" role="tabpanel">
                         <h4 class="card-title">@Model.Title</h4>
-                        <h6 class="card-subtitle mb-2">Created by </h6>
+                        <h6 class="card-subtitle mb-2">Created by @ViewBag.FirstName @ViewBag.LastName</h6>
                         <p class="card-text">@Model.Description </p>
                     </div>
                     <div class="tab-pane" id="updates" role="tabpanel" aria-labelledby="updates-tab">
@@ -40,7 +43,7 @@
                         @foreach (var reward in ViewBag.Rewards)
                         {
                             <h4 class="card-title">@reward.Title</h4>
-                            <h6 class="card-subtitle mb-2">Posted on @reward.Price </h6>
+                            <h6 class="card-subtitle mb-2">@reward.Price &euro;</h6>
                             <p class="card-text">@reward.Description </p>
                             if (Model.UserId.ToString() != User.FindFirst(ClaimTypes.NameIdentifier).Value)
                             {
@@ -48,6 +51,11 @@
                                 <hr class="my-4">
                             }
                         }
+                    </div>
+                    <div class="tab-pane" id="statistics" role="tabpanel">
+                        <h4 class="card-title">@Model.CurrentAmount out of @Model.Goal &euro; pledged</h4>
+                        <h6 class="card-subtitle mb-2">@Model.NumberOfBackers backers</h6>
+                        <p class="card-text">Ending on @Model.EndDate.ToString("dd/MM/yyyy") </p>
                     </div>
                 </div>
             </div>

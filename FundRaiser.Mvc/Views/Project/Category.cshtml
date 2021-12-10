@@ -13,7 +13,7 @@
             <div class="card">
                 @if (project.Media.Count > 0)
                 {
-                    <img src="images/@project.Media[0].Path" title="project image" />
+                    <img src="/images/@project.Media[0].Path" title="project image" />
                 }
                 else
                 {
@@ -21,7 +21,7 @@
                 }
 
                 <div class="card-header">
-                    <h4>@project.CurrentAmount / @project.Goal</h4>
+                    <h4>@project.CurrentAmount / @project.Goal &euro;</h4>
                     <progress value="@(project.CurrentAmount/project.Goal*100)" , max="100"></progress>
                 </div>
                 <div class="card-body">
