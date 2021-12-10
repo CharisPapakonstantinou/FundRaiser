@@ -1,11 +1,12 @@
 using FundRaiser.Common.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FundRaiser.Common.Database
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
-        public DbSet<User> Users { get; set; } 
         public DbSet<Project> Projects { get; set; }
         public DbSet<Reward> Rewards { get; set; }
         public DbSet<Update> Updates { get; set; }
@@ -15,7 +16,7 @@ namespace FundRaiser.Common.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server = localhost; Initial Catalog = 'FundRaiser'; User Id = SA; Password=123456Ab");
+            optionsBuilder.UseSqlServer("Server = localhost; Initial Catalog = 'FundRaiser'; User Id = SA; Password=admin!@#123");
         }
         
         public AppDbContext() : base() { }
@@ -24,6 +25,7 @@ namespace FundRaiser.Common.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
              //User - Reward many to many relationship (via Funds as intermediate table)
               modelBuilder.Entity<Fund>().HasKey(f => new { f.UserId, f.RewardId });
 

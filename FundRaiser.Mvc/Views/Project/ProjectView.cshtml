@@ -1,0 +1,56 @@
+﻿@model FundRaiser.Common.Models.Project
+@{
+    ViewData["Title"] = "Project View";
+}
+@using System.Security.Claims;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="project-details" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#description" role="tab" aria-controls="description" aria-selected="true">Description</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#updates" role="tab" aria-controls="updates" aria-selected="false">Updates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#rewards" role="tab" aria-controls="rewards" aria-selected="false">Rewards</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content mt-3">
+                    <div class="tab-pane active" id="description" role="tabpanel">
+                        <h4 class="card-title">@Model.Title</h4>
+                        <h6 class="card-subtitle mb-2">Created by </h6>
+                        <p class="card-text">@Model.Description </p>
+                    </div>
+                    <div class="tab-pane" id="updates" role="tabpanel" aria-labelledby="updates-tab">
+                        @foreach (var update in ViewBag.Updates)
+                        {
+                            <h4 class="card-title">@update.Title</h4>
+                            <h6 class="card-subtitle mb-2">Posted on @update.PostDate </h6>
+                            <p class="card-text">@update.Description </p>
+                            <hr class="my-4">
+                        }
+                    </div>
+                    <div class="tab-pane" id="rewards" role="tabpanel" aria-labelledby="rewards-tab">
+                        @foreach (var reward in ViewBag.Rewards)
+                        {
+                            <h4 class="card-title">@reward.Title</h4>
+                            <h6 class="card-subtitle mb-2">Posted on @reward.Price </h6>
+                            <p class="card-text">@reward.Description </p>
+                            if (Model.UserId.ToString() != User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                            {
+                                <a class="btn btn-primary" asp-area="" asp-controller="Reward" asp-action="Buy" asp-route-rewardId="@reward.Id" asp-route-projectId="@Model.Id">Buy Reward</a>
+                                <hr class="my-4">
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,10 @@
 ﻿@model List<FundRaiser.Common.Models.Project>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Dashboard";
 }
 
 <div class="text-center mb-4">
-    <h1 class="display-4">Fund Raiser</h1>
-    <h3>Check all available projects and make your fund.</h3>
+    <h4>My Projects</h4>
 </div>
 <div class="row">
     @foreach (var project in Model)
@@ -20,7 +19,6 @@
                 {
                     <img src="images/no_image.jpg" title="project image" />
                 }
-                
                 <div class="card-header">
                     <h4>@project.CurrentAmount / @project.Goal</h4>
                     <progress value="@(project.CurrentAmount/project.Goal*100)" , max="100"></progress>
@@ -38,7 +36,20 @@
                 </div>
                 <div class="card-footer">
                     <small class="text-muted">@((project.EndDate - DateTime.Now).Days) days to go</small>
-                    <a class="btn btn-primary float-right" asp-area="" asp-controller="Project" asp-action="ProjectView" asp-route-id="@project.Id">Read More</a>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary col" asp-area="" asp-controller="Update" asp-action="Create" asp-route-id="@project.Id">
+                        Add Update
+                    </a>
+                    <a class="btn btn-secondary col" asp-area="" asp-controller="Reward" asp-action="Create" asp-route-id="@project.Id">
+                        Add Reward
+                    </a>
+                    <a class="btn btn-info col" asp-area="" asp-controller="Project" asp-action="Update" asp-route-id="@project.Id">
+                        Update Project
+                    </a>
+                    <a class="btn btn-danger col" asp-area="" asp-controller="Project" asp-action="Delete" asp-route-id="@project.Id">
+                        Delete Project
+                    </a>
                 </div>
             </div>
         </div>

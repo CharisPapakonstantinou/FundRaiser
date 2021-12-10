@@ -1,12 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
 namespace FundRaiser.Common.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        //Primary key
-        public int Id { get; set; }
-
         //Base properties
         public string FirstName { get; set; }
         public string LastName { get; set; }

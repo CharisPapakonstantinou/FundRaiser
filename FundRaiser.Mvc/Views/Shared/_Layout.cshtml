@@ -1,17 +1,21 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FundRaiser.Mvc</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Corinthia:wght@700&family=Lora:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FundRaiser.Mvc</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FundRaiser-Team 5</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -22,22 +26,56 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
                     </li>
                 </ul>
+                <div class="form-group">
+                    <form class="d-flex pt-3">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
+                    </form>
+                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            My Account
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" asp-area="" asp-controller="Project" asp-action="Create">Create Project</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Project" asp-action="Dashboard">My Projects</a>
+                            <a class="dropdown-item" href="#">My Funds</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                    </div>
+                }
             </div>
         </div>
     </nav>
 </header>
-<div class="container">
+<div class="container-fluid">
     <main role="main" class="pb-3">
+        <div class="row list-group list-group-horizontal border-bottom border-grey-400 mb-4">
+            @foreach (var category in Enum.GetValues(typeof(FundRaiser.Common.Models.Category)))
+            {
+                <a class="col list-group-item list-group-item-action rounded-0" asp-area="" asp-controller="Project" asp-action="Category" asp-route-id="@((int) category)">
+                    <span class="h4 ml-4">@category.ToString()</span>
+                </a>
+            }
+        </div>
         @RenderBody()
     </main>
 </div>
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2021 - FundRaiser.Mvc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2021 - FundRaiser.Mvc - <a asp-area="" asp-controller="Home" asp-action="About">About</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
