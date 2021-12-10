@@ -14,6 +14,6 @@ namespace FundRaiser.Common.Interfaces
         Task<bool> Delete(int id);
         Task<List<Reward>> GetRewards(int projectId);
         Task<List<Reward>> GetBackerRewards(int userId, int projectId);
-        Task<bool> BuyReward(int userId, int rewardId, int projectId);
+        Task<bool> BuyReward(int userId, int rewardId);
     }
 }

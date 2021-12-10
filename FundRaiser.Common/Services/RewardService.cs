@@ -66,7 +66,7 @@ namespace FundRaiser.Common.Services
                 .ToListAsync();
         }
 
-        public async Task<bool> BuyReward(int userId, int rewardId, int projectId)
+        public async Task<bool> BuyReward(int userId, int rewardId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
@@ -81,9 +81,9 @@ namespace FundRaiser.Common.Services
                 return false;
             }
 
-            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == reward.ProjectId);
 
-            var isAlreadyBacker = await _context.Funds.Include(f => f.Reward).AnyAsync(f => f.UserId == userId && f.Reward.ProjectId == projectId);
+            var isAlreadyBacker = await _context.Funds.Include(f => f.Reward).AnyAsync(f => f.UserId == userId && f.Reward.ProjectId == project.Id);
 
             await _context.Funds.AddAsync(new Fund()
             {

@@ -3,6 +3,7 @@ using FundRaiser.Common.Interfaces;
 using FundRaiser.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -85,10 +86,10 @@ namespace FundRaiser.Api.Controllers
                 : Ok(new ApiResult<RewardDto>(new RewardDto(patchDto)));
         }
 
-        [HttpPost("/BuyReward/{rewardId}")]
-        public async Task<ActionResult<object>> BuyReward(int userId, int rewardId, int projectId)
+        [HttpPost("/BuyReward")]
+        public async Task<ActionResult<object>> BuyReward([Required] int userId, [Required] int rewardId)
         {
-            var buyReward = await _service.BuyReward(userId, rewardId, projectId);
+            var buyReward = await _service.BuyReward(userId, rewardId);
 
             return buyReward == false
                 ? NotFound(new ApiResult<object>(null, false, $"Could not buy reward with Id = {rewardId}."))
