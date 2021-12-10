@@ -70,7 +70,7 @@ namespace FundRaiser.Mvc.Controllers
                 }
 
                 var result = await _projectService.Create(project);
-                RedirectToAction("Dashboard");
+                return RedirectToAction("Dashboard");
             }
             return View(model);
         }
