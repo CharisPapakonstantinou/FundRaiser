@@ -23,7 +23,7 @@ namespace FundRaiser.Common.Dto
         public MediaDto(Media media)
         {
             //For testing purpose. Domain info should be injected from Configuration.
-            string appBasePath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory())?.ToString();
+            string appBasePath = Directory.GetCurrentDirectory();
             
             Id = media.Id;
             ProjectId = media.ProjectId;

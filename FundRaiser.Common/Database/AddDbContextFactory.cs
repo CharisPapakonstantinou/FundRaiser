@@ -10,7 +10,7 @@ namespace FundRaiser.Common.Database
         public AppDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath($"{Environment.CurrentDirectory}/../Configs")
+                .SetBasePath($"{Environment.CurrentDirectory}")
                 .AddJsonFile("appsettings.json")
                 .Build();;
 

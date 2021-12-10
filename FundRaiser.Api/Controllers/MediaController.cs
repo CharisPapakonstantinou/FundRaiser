@@ -50,7 +50,7 @@ namespace FundRaiser.Api.Controllers
             if (media == null)
                 NotFound(new ApiResult<MediaDto>(null, false, "No media found for corresponding id"));
                     
-            Byte[] b = await System.IO.File.ReadAllBytesAsync($"{Directory.GetParent(Environment.CurrentDirectory)}/{media.Path}");
+            Byte[] b = await System.IO.File.ReadAllBytesAsync($"{Environment.CurrentDirectory}/{media.Path}");
 
             return File(b, media.MediaType == MediaType.Image ? "image/jpeg" : "video/mp4");
         }
