@@ -11,12 +11,10 @@
             <div class="form-group">
                 <label asp-for="UserName"></label>
                 <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password"></label>
                 <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <div class="custom-control custom-checkbox">
@@ -25,6 +23,10 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(modelState => modelState.Errors))
+            {
+                <p class="text-danger">@error.ErrorMessage</p>
+            }
         </form>
         <div class="my-4">
             Don't have an account yet?
